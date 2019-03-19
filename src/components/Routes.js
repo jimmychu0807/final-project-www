@@ -1,13 +1,17 @@
-import React, { Fragment } from 'react';
-import { Route, Link } from 'react-router-dom';
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 
-import home from '../pages/home';
+// other pages and layout
+import Layout from './Layout';
+import Home from '../pages/home';
 
-function Routes() {
+function Routes(props) {
   return(
-    <Fragment>
-      <Route path="/" exact component={ home } />
-    </Fragment>
+    <Switch>
+      <Route path="/" exact render={ props =>
+        <Layout.Main><Home /></Layout.Main>
+      }/>
+    </Switch>
   )
 }
 
