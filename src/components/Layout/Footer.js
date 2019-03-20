@@ -1,9 +1,10 @@
 import React from 'react';
 
-function Footer(props) {
+export default (props) => {
   return (
-    <div>Footer</div>
+    <footer>
+      <hr/>
+      Built with <span role='img' aria-label="love">❤️</span> by Jimmy Chu
+    </footer>
   );
-}
-
-export default Footer;
+};

@@ -1,17 +1,17 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 // other pages and layout
-import Layout from './Layout';
+import { MainLayout } from './Layout';
 import Home from '../pages/home';
 
 function Routes(props) {
   return(
-    <Switch>
+    <Router>
       <Route path="/" exact render={ props =>
-        <Layout.Main><Home /></Layout.Main>
+        <MainLayout><Home /></MainLayout>
       }/>
-    </Switch>
+    </Router>
   )
 }
 

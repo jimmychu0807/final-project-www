@@ -1,8 +1,12 @@
 // import libraries
 import React, { Component } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { DrizzleProvider } from 'drizzle-react';
+import { LoadingContainer } from 'drizzle-react-components';
 
-// import project own components
+// import own services
+import { drizzleOpts } from '../../services/drizzle';
+
+// import own components
 import Routes from '../Routes';
 
 // import own style
@@ -11,9 +15,11 @@ import './style.css';
 class App extends Component {
   render() {
     return (
-      <Router>
-        <Routes />
-      </Router>
+      <DrizzleProvider options={ drizzleOpts }>
+        <LoadingContainer>
+          <Routes />
+        </LoadingContainer>
+      </DrizzleProvider>
     );
   }
 }

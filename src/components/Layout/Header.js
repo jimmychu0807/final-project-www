@@ -1,9 +1,14 @@
 import React from 'react';
 
-function Header(props) {
-  return (
-    <div>Header</div>
-  );
-}
+export default (props) => {
 
-export default Header;
+  const { account, accountBal } = props;
+
+  return(<header>
+    <h1>Lottery Pot</h1>
+    <div><a href="#">Historical</a></div>
+    <div><a href="#">Create a Pot</a></div>
+    <div>Account: { account }</div>
+    <div>Balance: { accountBal }</div>
+  </header>)
+};

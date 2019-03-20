@@ -1,3 +1,3 @@
-import Main from './Main';
+import _MainLayout from './MainLayout';
 
-export default { Main }
+export const MainLayout = _MainLayout;
