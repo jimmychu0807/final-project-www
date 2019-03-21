@@ -30,7 +30,7 @@ class HeaderContainer extends React.Component {
 }
 
 HeaderContainer.contextTypes = {
-  drizzle: PropTypes.object
+  drizzle: PropTypes.object,
 }
 
 export default withDrizzle(HeaderContainer);

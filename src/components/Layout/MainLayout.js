@@ -9,13 +9,12 @@ class MainLayout extends Component {
   }
 
   render() {
-    return (
-      <React.Fragment>
-        <HeaderContainer />
-        { this.props.children }
-        <Footer />
-      </React.Fragment>
-    )
+    return (pug`
+      .container-fluid
+        HeaderContainer/
+        = this.props.children
+        Footer/
+    `)
   }
 }
 
