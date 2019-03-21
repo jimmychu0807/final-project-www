@@ -8,7 +8,7 @@ import { drizzleOpts } from '../../services/drizzle';
 
 // import own components
 import Routes from '../Routes';
-import PotsNewModal from '../../pages/PotsNewModal';
+import PotsNewModalContainer from '../PotsNewModal';
 
 // import own style
 import './style.css';
@@ -20,7 +20,7 @@ class App extends Component {
         <LoadingContainer>
           <React.Fragment>
             <Routes />
-            <PotsNewModal />
+            <PotsNewModalContainer />
           </React.Fragment>
         </LoadingContainer>
       </DrizzleProvider>
