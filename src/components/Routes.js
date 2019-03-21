@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 // other pages and layout
 import { MainLayout } from './Layout';
-import Home from '../pages/home';
+import Home from '../pages/Home';
 
 function Routes(props) {
   return(

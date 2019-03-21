@@ -16,10 +16,7 @@ class HeaderContainer extends React.Component {
     const web3 = this.drizzle.web3;
     const account = this.props.accounts[0];
 
-    this.state = {
-      account: account,
-      accountBal: null,
-    }
+    this.state = { account, accountBal: null, }
 
     web3.eth.getBalance(account).then(res => {
       const balInEther = web3.utils.fromWei(res);
@@ -28,7 +25,6 @@ class HeaderContainer extends React.Component {
   }
 
   render() {
-    const { account, accountBal } = this.state;
     return(<Header { ...this.state } />);
   }
 }

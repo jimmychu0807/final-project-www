@@ -16,10 +16,9 @@
     "react-scripts": "2.1.8"
   },
   "scripts": {
-    "start:dev": "react-scripts --inspect start",
-    "start:prod": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start:dev": "react-app-rewired --inspect start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -30,5 +29,11 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "babel-plugin-transform-react-pug": "^7.0.0",
+    "customize-cra": "^0.2.12",
+    "react-app-rewired": "^2.1.1"
+  }
 }
