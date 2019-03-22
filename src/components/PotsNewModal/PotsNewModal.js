@@ -1,19 +1,43 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import moment from 'moment';
+
+import { withDrizzle } from '../../services/drizzle';
 
 class PotsNewModal extends React.Component {
 
+  constructor(props, context) {
+    super(props);
+    this.formRef = React.createRef();
+    this.web3 = context.drizzle.web3;
+  }
+
+  extractNewPotParams = () => {
+    const form = this.formRef.current;
+
+    const potName = form.querySelector("#inputPotName").value;
+    const potType = form.querySelector("input[name='inputPotType']:checked").value;
+
+    const potExpiredTime = form.querySelector("#inputPotExpiredTime").value;
+    const potDuration = moment(potExpiredTime).diff(moment(), 'seconds');
+
+    const potMinStakeInEther = form.querySelector("#inputPotMinStake").value;
+    const potMinStake = this.web3.utils.toWei(potMinStakeInEther);
+
+    const yourStakeInEther = form.querySelector("#inputYourStake").value;
+    const yourStake = this.web3.utils.toWei(yourStakeInEther);
+
+    return { potName, potType, potDuration, potMinStake, yourStake };
+  }
+
   handleCloseModal = (ev) => {
-
-    // TODO: Maybe clean up form inputs?
-
+    // TODO:
+    //   - clean up form inputs if submitted
     $("#potsNewModal").modal('hide');
-    this.props.createNewPot(ev);
+    this.props.createNewPot(this.extractNewPotParams());
   }
 
   render() {
-
-    const props = this.props;
-
     return (pug`
       #potsNewModal.modal.fade(tabIndex="-1" role="dialog" aria-hidden="true")
         .modal-dialog(role="document"): .modal-content
@@ -25,7 +49,7 @@ class PotsNewModal extends React.Component {
               span(aria-hidden="true") &times;
 
           //- body
-          .modal-body: form#createNewPotForm(ref=props.formRef)
+          .modal-body: form#createNewPotForm(ref=this.formRef)
             .row.form-group
               label.col-sm-3.col-form-label(for="inputPotName" required) Name
               .col-sm-9: input#inputPotName.form-control(placeholder="Pot Name" type="text")
@@ -62,4 +86,8 @@ class PotsNewModal extends React.Component {
   }
 }
 
-export default PotsNewModal;
+PotsNewModal.contextTypes = {
+  drizzle: PropTypes.object,
+}
+
+export default withDrizzle(PotsNewModal);
