@@ -22,7 +22,7 @@ class PotsBoard extends React.Component {
       <div className="row">
         { potInfo && potInfo.map(onePot =>
           <div key={ onePot.potName } className="col-12 col-sm-6 col-lg-4">
-            <div className="card m-2">
+            <div className="card my-2">
               <div className="card-body">
                 <h5 className="card-title">{ onePot.potName }</h5>
                 <ul className="card-text">

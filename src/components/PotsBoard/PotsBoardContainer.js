@@ -10,6 +10,9 @@ import LotteryPot from '../../contracts/LotteryPot.json';
 import { withDrizzle } from '../../services/drizzle';
 
 const POT_FILTERS = [ "all", "upcoming", "historical" ];
+export const DEFAULT_POT_FILTER = "upcoming";
+const POT_SORTBY = [ "closedTimeAscending", "closedTimeDescending" ];
+export const DEFAULT_POT_SORTBY = "closedTimeAscending";
 
 class PotsBoardContainer extends React.Component {
 
@@ -23,14 +26,15 @@ class PotsBoardContainer extends React.Component {
   }
 
   componentDidMount() {
-    this.getLotteryPots({ filter: "upcoming" })
+    const { filter, sortBy } = this.props;
+    this.getLotteryPots({ filter, sortBy })
       .then(potInfo => this.setState({ potInfo }));
   }
 
   getLotteryPots = async(opts = {}) => {
     const default_opts = {
-     filter: "all", // ["all", "upcoming", "historical" ]
-     sortBy: "closedTimeAscending" // [ "closedTimeAscending", "closedTimeDescending" ]
+      filter: DEFAULT_POT_FILTER,
+      sortBy: DEFAULT_POT_SORTBY
     }
     const { filter, sortBy } = Object.assign({}, default_opts, opts);
 
