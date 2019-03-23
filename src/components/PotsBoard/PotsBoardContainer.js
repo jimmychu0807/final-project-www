@@ -23,15 +23,23 @@ class PotsBoardContainer extends React.Component {
   }
 
   componentDidMount() {
-    this.getLotteryPots({ filter: "upcoming", sort: "ascending" })
+    this.getLotteryPots({ filter: "upcoming" })
       .then(potInfo => this.setState({ potInfo }));
   }
 
-  getLotteryPots = async({ filter = "all", sort = "ascending" }) => {
+  getLotteryPots = async(opts = {}) => {
+    const default_opts = {
+     filter: "all", // ["all", "upcoming", "historical" ]
+     sortBy: "closedTimeAscending" // [ "closedTimeAscending", "closedTimeDescending" ]
+    }
+    const { filter, sortBy } = Object.assign({}, default_opts, opts);
+
     const { LotteryPotFactory, LotteryPot } = this.contracts;
     const web3 = this.web3;
 
     const potAddrs = await LotteryPotFactory.methods.getLotteryPots().call();
+
+    // Get all pot info from the blockchain
     let potInfo = await Promise.all(potAddrs
       .map( addr => new web3.eth.Contract(LotteryPot.abi, addr))
       .map( async(contract) => {
@@ -57,7 +65,13 @@ class PotsBoardContainer extends React.Component {
     else if (filter === "historical")
       potInfo = potInfo.filter(onePot => onePot.potClosedDateTime < currentUTS);
 
-    // sorting
+    // in-place sorting
+    if (sortBy === "closedTimeAscending")
+      potInfo.sort((a, b) => Number.parseInt(a.potClosedDateTime) -
+        Number.parseInt(b.potClosedDateTime));
+    else if (sortBy === "closedTimeDescending")
+      potInfo.sort((a, b) => Number.parseInt(b.potClosedDateTime) -
+        Number.parseInt(a.potClosedDateTime));
 
     log(potInfo);
     return potInfo;
