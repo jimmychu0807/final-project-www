@@ -9,6 +9,13 @@ import { log } from '../../services/logging';
 import LotteryPot from '../../contracts/LotteryPot.json';
 import { withDrizzle } from '../../services/drizzle';
 
+// own helpers
+import { match } from '../../services/helpers';
+
+// --- Constant Declaration ---
+
+// Notice these are UI-related constants. Model-related constants should be
+//   defined at `components/Pot.js`.
 const POT_FILTERS = [ "all", "upcoming", "historical" ];
 export const DEFAULT_POT_FILTER = "upcoming";
 const POT_SORTBY = [ "closedTimeAscending", "closedTimeDescending" ];
@@ -64,18 +71,23 @@ class PotsBoardContainer extends React.Component {
 
     // filtering
     const currentUTS = moment().unix();
-    if (filter === "upcoming")
-      potInfo = potInfo.filter(onePot => onePot.potClosedDateTime >= currentUTS);
-    else if (filter === "historical")
-      potInfo = potInfo.filter(onePot => onePot.potClosedDateTime < currentUTS);
+    potInfo = match(filter)
+      .on( x => x === "all", () => potInfo)
+      .on( x => x === "upcoming",
+        () => potInfo.filter(onePot => onePot.potClosedDateTime >= currentUTS))
+      .on( x => x === "historical",
+        () => potInfo.filter(onePot => onePot.potClosedDateTime < currentUTS))
+      .otherwise(() => { throw new Error(`Unrecognized filter: ${filter}`) });
 
     // in-place sorting
-    if (sortBy === "closedTimeAscending")
-      potInfo.sort((a, b) => Number.parseInt(a.potClosedDateTime) -
-        Number.parseInt(b.potClosedDateTime));
-    else if (sortBy === "closedTimeDescending")
-      potInfo.sort((a, b) => Number.parseInt(b.potClosedDateTime) -
-        Number.parseInt(a.potClosedDateTime));
+    potInfo = match(sortBy)
+      .on( x => x === 'closedTimeAscending', () =>
+        potInfo.sort( (a, b) => Number.parseInt(a.potClosedDateTime) -
+          Number.parseInt(b.potClosedDateTime) ) )
+      .on( x => x === 'closedTimeDescending', () =>
+        potInfo.sort((a, b) => Number.parseInt(b.potClosedDateTime) -
+        Number.parseInt(a.potClosedDateTime) ) )
+      .otherwise(() => { throw new Error(`Unrecognized sortBy: ${sortBy}`) });
 
     log(potInfo);
     return potInfo;
