@@ -1,5 +1,1 @@
-import _PotsNewModalContainer from './PotsNewModalContainer'
-
-const PotsNewModalContainer = _PotsNewModalContainer;
-
-export default PotsNewModalContainer;
+export { default } from './PotsNewModalContainer';
