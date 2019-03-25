@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default (props) => {
+const Footer = (props) => {
   return (
     <footer>
       <hr/>
@@ -8,3 +8,5 @@ export default (props) => {
     </footer>
   );
 };
+
+export default React.memo(Footer);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default (props) => {
+const Header = (props) => {
 
   const { account, accountBal } = props;
 
@@ -14,3 +14,5 @@ export default (props) => {
     <div>Balance: { accountBal }</div>
   </header>)
 };
+
+export default React.memo(Header);

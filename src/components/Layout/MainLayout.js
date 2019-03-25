@@ -1,13 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
 import HeaderContainer from './HeaderContainer'
 import Footer from './Footer'
 
-class MainLayout extends Component {
-  shouldComponentUpdate() {
-    // ref: https://reactpatterns.com/#layout-component
-    return false;
-  }
-
+class MainLayout extends React.PureComponent {
   render() {
     return (pug`
       .container-fluid
