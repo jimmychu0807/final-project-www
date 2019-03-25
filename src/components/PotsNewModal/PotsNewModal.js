@@ -2,14 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import { withDrizzle } from '../../services/drizzle';
+import { withDrizzleContextConsumer } from '../../services/drizzle';
 
 class PotsNewModal extends React.Component {
 
-  constructor(props, context) {
+  constructor(props) {
     super(props);
     this.formRef = React.createRef();
-    this.web3 = context.drizzle.web3;
+
+    const { drizzle, drizzleState } = props.drizzleContext;
+    this.web3 = drizzle.web3;
   }
 
   extractNewPotParams = () => {
@@ -86,8 +88,4 @@ class PotsNewModal extends React.Component {
   }
 }
 
-PotsNewModal.contextTypes = {
-  drizzle: PropTypes.object,
-}
-
-export default withDrizzle(PotsNewModal);
+export default withDrizzleContextConsumer(PotsNewModal);

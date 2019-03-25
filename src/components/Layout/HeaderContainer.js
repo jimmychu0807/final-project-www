@@ -2,26 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // import own services
-import { withDrizzle } from '../../services/drizzle';
+import { withDrizzleContextConsumer } from '../../services/drizzle';
 
 // import own component
 import Header from './Header';
 
 class HeaderContainer extends React.Component {
 
-  constructor(props, context) {
+  constructor(props) {
     super(props);
-    this.drizzle = context.drizzle;
 
-    const web3 = this.drizzle.web3;
-    const account = this.props.accounts[0];
+    const { drizzle, drizzleState } = props.drizzleContext;
+    const [ account, accountBal ] = Object.entries(drizzleState.accountBalances)[0];
 
-    this.state = { account, accountBal: null, }
-
-    web3.eth.getBalance(account).then(res => {
-      const balInEther = web3.utils.fromWei(res);
-      this.setState({ accountBal: balInEther });
-    });
+    this.web3 = drizzle.web3;
+    this.state = { account, accountBal: this.web3.utils.fromWei(accountBal) };
   }
 
   render() {
@@ -29,8 +24,4 @@ class HeaderContainer extends React.Component {
   }
 }
 
-HeaderContainer.contextTypes = {
-  drizzle: PropTypes.object,
-}
-
-export default withDrizzle(HeaderContainer);
+export default withDrizzleContextConsumer(HeaderContainer);

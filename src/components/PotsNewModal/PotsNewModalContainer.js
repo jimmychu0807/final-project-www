@@ -2,20 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import PotsNewModal from './PotsNewModal';
-import { withDrizzle } from '../../services/drizzle';
+import { withDrizzleContextConsumer } from '../../services/drizzle';
 import { log } from '../../services/logging';
 
 class PotsNewModalContainer extends React.Component {
 
-  constructor(props, context) {
+  constructor(props) {
     super(props);
-    this.contracts = context.drizzle.contracts;
+
+    const { drizzle, drizzleState } = props.drizzleContext;
+
+    this.web3 = drizzle.web3;
+    this.contracts = drizzle.contracts;
   }
 
   handleCreateNewPot = async(params) => {
-
     // TODO: Params validation
-
     const { potName, potMinStake, potDuration, potType, yourStake } = params;
 
     log(`Create Pot with: ${potName}, ${potMinStake}, ${potDuration}, ${potType}, ${yourStake}`);
@@ -36,8 +38,4 @@ class PotsNewModalContainer extends React.Component {
   }
 }
 
-PotsNewModalContainer.contextTypes = {
-  drizzle: PropTypes.object,
-}
-
-export default withDrizzle(PotsNewModalContainer);
+export default withDrizzleContextConsumer(PotsNewModalContainer);

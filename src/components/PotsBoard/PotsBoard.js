@@ -2,15 +2,17 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import { withDrizzle } from '../../services/drizzle';
+import { withDrizzleContextConsumer } from '../../services/drizzle';
 import helpers, { Web3Helper } from '../../services/helpers';
 
 class PotsBoard extends React.Component {
 
   constructor(props, context) {
     super(props);
-    this.web3 = context.drizzle.web3;
-    this.contracts = context.drizzle.contracts;
+
+    const { drizzle, drizzleState } = props.drizzleContext;
+    this.web3 = drizzle.web3;
+    this.contracts = drizzle.contracts;
     this.web3Helper = Web3Helper(this.web3);
   }
 
@@ -42,8 +44,4 @@ class PotsBoard extends React.Component {
   }
 }
 
-PotsBoard.contextTypes = {
-  drizzle: PropTypes.object,
-}
-
-export default withDrizzle(PotsBoard);
+export default withDrizzleContextConsumer(PotsBoard);

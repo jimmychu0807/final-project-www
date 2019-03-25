@@ -7,7 +7,7 @@ import { log } from '../../services/logging';
 
 // smart contract stuff
 import LotteryPot from '../../contracts/LotteryPot.json';
-import { withDrizzle } from '../../services/drizzle';
+import { withDrizzleContextConsumer } from '../../services/drizzle';
 
 // own helpers
 import { match } from '../../services/helpers';
@@ -25,11 +25,12 @@ class PotsBoardContainer extends React.Component {
 
   constructor(props, context) {
     super(props);
-    this.web3 = context.drizzle.web3;
-    this.contracts = context.drizzle.contracts;
-    this.state = {
-      potInfo: null,
-    }
+
+    const { drizzle, drizzleState } = props.drizzleContext;
+    this.web3 = drizzle.web3;
+    this.contracts = drizzle.contracts;
+
+    this.state = { potInfo: null }
   }
 
   componentDidMount() {
@@ -100,8 +101,4 @@ class PotsBoardContainer extends React.Component {
   }
 }
 
-PotsBoardContainer.contextTypes = {
-  drizzle: PropTypes.object,
-}
-
-export default withDrizzle(PotsBoardContainer);
+export default withDrizzleContextConsumer(PotsBoardContainer);
