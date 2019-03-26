@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 // import own services
 import { withDrizzleContextConsumer } from '../../services/drizzle';

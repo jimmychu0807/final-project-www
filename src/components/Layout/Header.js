@@ -9,7 +9,7 @@ const Header = (props) => {
     <h1><Link to="/">Lottery Pot</Link></h1>
     <div><Link to="/pots?filter=historical&sortBy=closedTimeDescending">Historical</Link></div>
     <div><button type="button" className="btn btn-primary"
-      data-toggle="modal" data-target="#potsNewModal">Create New Pot</button></div>
+      data-toggle="modal" data-target="#potNewModal">Create New Pot</button></div>
     <div>Account: { account }</div>
     <div>Balance: { accountBal }</div>
   </header>)

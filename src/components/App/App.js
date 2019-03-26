@@ -8,7 +8,9 @@ import { withDrizzleContextProvider,
 
 // import own components
 import Routes from '../Routes';
-import PotsNewModalContainer from '../PotsNewModal';
+import PotNewModalContainer from '../PotNewModal';
+import PotParticipatesModalContainer from '../PotParticipatesModal';
+
 import EthLoading from '../../pages/eth-loading'
 
 // import own style
@@ -26,7 +28,8 @@ class App extends Component {
 
     return(<React.Fragment>
       <Routes />
-      <PotsNewModalContainer />
+      <PotNewModalContainer />
+      <PotParticipatesModalContainer />
     </React.Fragment>);
   }
 }

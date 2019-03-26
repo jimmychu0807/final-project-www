@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import { withDrizzleContextConsumer } from '../../services/drizzle';
 
-class PotsNewModal extends React.Component {
+class PotNewModal extends React.Component {
 
   constructor(props) {
     super(props);
@@ -35,18 +34,18 @@ class PotsNewModal extends React.Component {
   handleCloseModal = (ev) => {
     // TODO:
     //   - clean up form inputs if submitted
-    $("#potsNewModal").modal('hide');
+    $("#potNewModal").modal('hide');
     this.props.createNewPot(this.extractNewPotParams());
   }
 
   render() {
     return (pug`
-      #potsNewModal.modal.fade(tabIndex="-1" role="dialog" aria-hidden="true")
+      #potNewModal.modal.fade(tabIndex="-1" role="dialog" aria-hidden="true")
         .modal-dialog(role="document"): .modal-content
 
           //- header
           .modal-header
-            h5#potsNewModel-label.modal-title Create New Pot
+            h5#potNewModel-label.modal-title Create New Pot
             button.close(type="button" data-dismiss="modal" aria-label="Close")
               span(aria-hidden="true") &times;
 
@@ -58,7 +57,7 @@ class PotsNewModal extends React.Component {
             .row.form-group
               label.col-sm-3.col-form-label(for="inputPotMinStake" required) Min. Stake
               .col-sm-9: .input-group
-                input#inputPotMinStake.form-control(placehold="Min. Stake" type="number")
+                input#inputPotMinStake.form-control(placeholder="Min. Stake" type="number")
                 .input-group-append: span.input-group-text ether
             .row.form-group
               label.col-sm-3.col-form-label(for="inputPotExpiredTime" required) Closed Time
@@ -77,15 +76,14 @@ class PotsNewModal extends React.Component {
             .row.form-group
               label.col-sm-3.col-form-label(for="inputYourStake" required) Your Stake
               .col-sm-9: .input-group
-                input#inputYourStake.form-control(placehold="Your Stake" type="number")
+                input#inputYourStake.form-control(placeholder="Your Stake" type="number")
                 .input-group-append: span.input-group-text ether
 
           //- footer
           .modal-footer
-            button.btn.btn-secondary(type="button" data-dismiss="modal") Close
             button.btn.btn-primary(type="button" onClick=this.handleCloseModal) Create
     `);
   }
 }
 
-export default withDrizzleContextConsumer(PotsNewModal);
+export default withDrizzleContextConsumer(PotNewModal);

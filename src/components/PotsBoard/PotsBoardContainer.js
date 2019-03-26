@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import PotsBoard from './PotsBoard'
@@ -64,9 +63,10 @@ class PotsBoardContainer extends React.Component {
         const potState = await contract.methods.potState().call();
         const potTotalStakes = await contract.methods.totalStakes().call();
         const potTotalParticipants = await contract.methods.totalParticipants().call();
+        const myStake = await contract.methods.myStake().call();
 
         return { potName, potClosedDateTime, potMinStake, potType, potState,
-          potTotalStakes, potTotalParticipants }
+          potTotalStakes, potTotalParticipants, myStake }
       })
     );
 
@@ -95,9 +95,7 @@ class PotsBoardContainer extends React.Component {
   }
 
   render() {
-    return(pug`
-      PotsBoard(potInfo=this.state.potInfo)
-    `)
+    return(pug`PotsBoard(potInfo=this.state.potInfo)`)
   }
 }
 

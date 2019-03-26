@@ -28,6 +28,7 @@ export const match = (x) => ({
 const utsToLocalTime = (uts) => {
   return moment(uts * 1000).format("YYYY-MM-DD HH:mm");
 }
+
 const getPotType = (potType, purpose = "display") => {
   let result = null;
   const iPotType = _.toInteger(potType);

@@ -1,11 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-import PotsNewModal from './PotsNewModal';
+import PotNewModal from './PotNewModal';
 import { withDrizzleContextConsumer } from '../../services/drizzle';
 import { log } from '../../services/logging';
 
-class PotsNewModalContainer extends React.Component {
+class PotNewModalContainer extends React.Component {
 
   constructor(props) {
     super(props);
@@ -32,10 +31,8 @@ class PotsNewModalContainer extends React.Component {
   };
 
   render() {
-    return(pug`
-      PotsNewModal( createNewPot=this.handleCreateNewPot )
-    `);
+    return(pug`PotNewModal( createNewPot=this.handleCreateNewPot )`);
   }
 }
 
-export default withDrizzleContextConsumer(PotsNewModalContainer);
+export default withDrizzleContextConsumer(PotNewModalContainer);
