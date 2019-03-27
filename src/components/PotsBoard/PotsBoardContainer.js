@@ -1,18 +1,21 @@
+// external libraries
 import React from 'react'
 import moment from 'moment';
+import _ from 'lodash';
 
+// own components
 import PotsBoard from './PotsBoard'
 import { log } from '../../services/logging';
 
-// smart contract stuff
+// own services
+import { match } from '../../services/helpers';
+import { withAppContextConsumer } from '../../services/app-context';
+
+// smart contracts
 import LotteryPot from '../../contracts/LotteryPot.json';
 import { withDrizzleContextConsumer } from '../../services/drizzle';
 
-// own helpers
-import { match } from '../../services/helpers';
-
 // --- Constant Declaration ---
-
 // Notice these are UI-related constants. Model-related constants should be
 //   defined at `components/Pot.js`.
 const POT_FILTERS = [ "all", "upcoming", "historical" ];
@@ -29,13 +32,13 @@ class PotsBoardContainer extends React.Component {
     this.web3 = drizzle.web3;
     this.contracts = drizzle.contracts;
 
-    this.state = { potInfo: null }
+    this.state = { potMap: null }
   }
 
   componentDidMount() {
     const { filter, sortBy } = this.props;
     this.getLotteryPots({ filter, sortBy })
-      .then(potInfo => this.setState({ potInfo }));
+      .then(potMap => this.setState({ potMap }));
   }
 
   getLotteryPots = async(opts = {}) => {
@@ -56,6 +59,8 @@ class PotsBoardContainer extends React.Component {
       .map( async(contract) => {
         const potName = await contract.methods.potName().call();
 
+        const potAddr = contract.options.address;
+
         // This is in unix timestamp
         const potClosedDateTime = await contract.methods.closedDateTime().call();
         const potMinStake = await contract.methods.minStake().call();
@@ -65,7 +70,7 @@ class PotsBoardContainer extends React.Component {
         const potTotalParticipants = await contract.methods.totalParticipants().call();
         const myStake = await contract.methods.myStake().call();
 
-        return { potName, potClosedDateTime, potMinStake, potType, potState,
+        return { potName, potAddr, potClosedDateTime, potMinStake, potType, potState,
           potTotalStakes, potTotalParticipants, myStake }
       })
     );
@@ -90,13 +95,36 @@ class PotsBoardContainer extends React.Component {
         Number.parseInt(a.potClosedDateTime) ) )
       .otherwise(() => { throw new Error(`Unrecognized sortBy: ${sortBy}`) });
 
-    log(potInfo);
-    return potInfo;
+    // Using Map for object storage
+
+    const potMap = new Map();
+    potInfo.forEach(onePot => {
+      const { potAddr, ...potAttrs } = onePot;
+      potMap.set(potAddr, potAttrs);
+    });
+
+    log(potMap);
+
+    return potMap;
+  }
+
+  handleSetFocusedPot = (potAddr) => (ev) => {
+    this.props.appContext.setContextAttr("focusedPot", potAddr);
   }
 
   render() {
-    return(pug`PotsBoard(potInfo=this.state.potInfo)`)
+    return(
+      <PotsBoard
+        potMap={this.state.potMap}
+        handleSetFocusedPot={this.handleSetFocusedPot}
+      />
+    )
   }
 }
 
-export default withDrizzleContextConsumer(PotsBoardContainer);
+const enhance = _.flowRight([
+  withDrizzleContextConsumer,
+  withAppContextConsumer,
+]);
+
+export default enhance(PotsBoardContainer);

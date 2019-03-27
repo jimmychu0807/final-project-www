@@ -1,6 +1,8 @@
+// external libraries
 import React from 'react';
 
-import PotParticipatesModal from './PotParticipatesModal'
+// own components
+import PotParticipatesModal from './PotParticipatesModal';
 
 class PotParticipatesModalContainer extends React.Component {
   render() {

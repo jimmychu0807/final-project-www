@@ -1,6 +1,8 @@
+// external libraries
 import React from 'react'
 import moment from 'moment';
 
+// own services
 import { withDrizzleContextConsumer } from '../../services/drizzle';
 import helpers, { Web3Helper } from '../../services/helpers';
 
@@ -18,9 +20,12 @@ class PotsBoard extends React.Component {
     this.web3Helper = Web3Helper(this.web3);
   }
 
-  renderOpenActions = (onePot) => {
+  renderOpenActions = (potAddr) => {
+    const { handleSetFocusedPot } = this.props;
     return(
-      <a href="#" className="btn btn-primary" data-toggle="modal" data-target="#potParticipatesModal">
+      <a href="#" className="btn btn-primary" data-toggle="modal"
+        data-target="#potParticipatesModal"
+        onClick={ handleSetFocusedPot(potAddr) }>
         Participate
       </a>
     )
@@ -40,40 +45,38 @@ class PotsBoard extends React.Component {
   }
 
   render() {
-    const { potInfo } = this.props;
+    const { potMap } = this.props;
     const web3 = this.web3;
 
     // unix timestamp in second
     const nowUTS = moment().unix();
 
-    return(
-      <div className="row">
-        { potInfo && potInfo.map(onePot =>
-          <div key={ onePot.potName } className="col-12 col-sm-6 col-lg-4">
-            <div className="card-deck">
-              <div className="card my-2">
-                <div className="card-body">
-                  <h5 className="card-title">{ onePot.potName }</h5>
-                  <ul className="card-text">
-                    <li>Closed Time: { helpers.utsToLocalTime(onePot.potClosedDateTime) }</li>
-                    <li>Type: { helpers.getPotType(onePot.potType) }</li>
-                    <li>State: { helpers.getPotState(onePot.potState) }</li>
-                    <li>Min. Stake: { this.web3Helper.fromWei(onePot.potMinStake) } ether</li>
-                    <li>Current Stake: { this.web3Helper.fromWei(onePot.potTotalStakes) } ether</li>
-                    <li>Participants #: { onePot.potTotalParticipants }</li>
-                    <li>My stake: { onePot.myStake }</li>
-                  </ul>
+    return(<div className="row">
+      { potMap && Array.from(potMap.entries()).map( ([potAddr, onePot]) =>
+        <div key={ potAddr } className="col-12 col-sm-6 col-lg-4">
+          <div className="card-deck">
+            <div className="card my-2">
+              <div className="card-body">
+                <h5 className="card-title">{ onePot.potName }</h5>
+                <ul className="card-text">
+                  <li>Closed Time: { helpers.utsToLocalTime(onePot.potClosedDateTime) }</li>
+                  <li>Type: { helpers.getPotType(onePot.potType) }</li>
+                  <li>State: { helpers.getPotState(onePot.potState) }</li>
+                  <li>Min. Stake: { this.web3Helper.fromWei(onePot.potMinStake) } ether</li>
+                  <li>Current Stake: { this.web3Helper.fromWei(onePot.potTotalStakes) } ether</li>
+                  <li>Participants #: { onePot.potTotalParticipants }</li>
+                  <li>My stake: { onePot.myStake }</li>
+                </ul>
 
-                  { /* action buttons */ }
-                  { onePot.potClosedDateTime > nowUTS ? this.renderOpenActions(onePot) :
-                    this.renderClosedActions(onePot) }
-                </div>
+                { /* action buttons */ }
+                { onePot.potClosedDateTime > nowUTS ? this.renderOpenActions(potAddr) :
+                  this.renderClosedActions(potAddr) }
               </div>
             </div>
           </div>
-        ) }
-      </div>
-    );
+        </div>
+      ) }
+    </div>);
   }
 }
 
