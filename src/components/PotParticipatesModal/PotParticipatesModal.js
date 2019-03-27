@@ -14,6 +14,13 @@ class PotParticipatesModal extends React.Component {
 
   handleCloseModal = (ev) => {
     $("#potParticipatesModal").modal('hide');
+
+    const form = this.formRef.current;
+    const yourStakeInEther = form.querySelector("#inputYourStake").value;
+    const yourStake = this.web3.utils.toWei(yourStakeInEther);
+    const potAddr = this.props.focusedPot;
+
+    this.props.participate(potAddr, yourStake);
   }
 
   render() {
@@ -31,9 +38,9 @@ class PotParticipatesModal extends React.Component {
           .modal-body: form#participatePotForm(ref=this.formRef)
             //- TODO: showing additional stake
             .row.form-group
-              label.col-sm-3.col-form-label(for="yourStake" required) Your Stake
+              label.col-sm-3.col-form-label(for="inputYourStake" required) Your Stake
               .col-sm-9: .input-group
-                input#yourStake.form-control(placeholder="Your Stake" type="number")
+                input#inputYourStake.form-control(placeholder="Your Stake" type="number")
                 .input-group-append: span.input-group-text ether
 
           //- footer

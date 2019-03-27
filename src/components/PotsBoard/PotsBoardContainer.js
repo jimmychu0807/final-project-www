@@ -10,10 +10,10 @@ import { log } from '../../services/logging';
 // own services
 import { match } from '../../services/helpers';
 import { withAppContextConsumer } from '../../services/app-context';
+import { withDrizzleContextConsumer } from '../../services/drizzle';
 
 // smart contracts
 import LotteryPot from '../../contracts/LotteryPot.json';
-import { withDrizzleContextConsumer } from '../../services/drizzle';
 
 // --- Constant Declaration ---
 // Notice these are UI-related constants. Model-related constants should be

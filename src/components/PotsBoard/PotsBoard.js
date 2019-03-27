@@ -65,7 +65,7 @@ class PotsBoard extends React.Component {
                   <li>Min. Stake: { this.web3Helper.fromWei(onePot.potMinStake) } ether</li>
                   <li>Current Stake: { this.web3Helper.fromWei(onePot.potTotalStakes) } ether</li>
                   <li>Participants #: { onePot.potTotalParticipants }</li>
-                  <li>My stake: { onePot.myStake }</li>
+                  <li>My stake: { this.web3Helper.fromWei(onePot.myStake) } ether</li>
                 </ul>
 
                 { /* action buttons */ }
