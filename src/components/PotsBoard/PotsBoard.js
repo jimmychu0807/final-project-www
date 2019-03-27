@@ -31,15 +31,25 @@ class PotsBoard extends React.Component {
     )
   }
 
-  renderClosedActions = (onePot) => {
+  renderClosedActions = (potAddr) => {
     let actions = [];
 
     const potState = Pot.getPotState(onePot.potState);
 
     if (potState === "open")
-      actions.push(<a key={potState} href="#" className="btn btn-primary">Draw Winner</a>)
+      actions.push(
+        <a key={potState} href="#" className="btn btn-primary"
+          onClick={ handleDetermineWinner(potAddr) }>
+          Draw Winner
+        </a>
+      )
     else if (potState === "closed")
-      actions.push(<a key={potState} href="#" className="btn btn-primary">Withdraw Money!</a>)
+      actions.push(
+        <a key={potState} href="#" className="btn btn-primary"
+          onClick={ handleWithdrawMoney(potAddr) }>
+          Withdraw Money!
+        </a>
+      )
 
     return(actions);
   }
@@ -60,6 +70,7 @@ class PotsBoard extends React.Component {
                 <h5 className="card-title">{ onePot.potName }</h5>
                 <ul className="card-text">
                   <li>Closed Time: { helpers.utsToLocalTime(onePot.potClosedDateTime) }</li>
+                  <li>Pot Addr: { potAddr }</li>
                   <li>Type: { helpers.getPotType(onePot.potType) }</li>
                   <li>State: { helpers.getPotState(onePot.potState) }</li>
                   <li>Min. Stake: { this.web3Helper.fromWei(onePot.potMinStake) } ether</li>

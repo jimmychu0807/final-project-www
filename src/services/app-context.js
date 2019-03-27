@@ -2,6 +2,9 @@ import React from 'react';
 
 const AppContext = React.createContext({
   focusedPot: null,
+  potMap: null,
+  setPotInfo: (addr, potInfo) => {},
+  clearPotInfo: () => {},
   setContextAttr: (key, val) => {},
 });
 

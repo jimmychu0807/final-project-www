@@ -23,7 +23,6 @@ class PotNewModalContainer extends React.Component {
 
     // create the contract via LotteryPotFactory
     const { LotteryPotFactory } = this.contracts;
-
     const tx = await LotteryPotFactory.methods.createLotteryPot(potName,
       potDuration, potMinStake, potType).send({ value: yourStake });
 

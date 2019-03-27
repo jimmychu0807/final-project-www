@@ -22,11 +22,33 @@ class App extends Component {
     super(props);
 
     this.state = {
+      initialized: false,
       appContext: {
         focusedPot: null,
+        potMap: new Map(),
+        clearPotInfo: this.clearPotInfo,
+        setPotInfo: this.setPotInfo,
         setContextAttr: this.setContextAttr,
       },
     };
+  }
+
+  componentDidMount() {
+    const { drizzle } = this.props.drizzleContext;
+    this.unsubscribe = drizzle.store.subscribe(() => {
+      const drizzleState = drizzle.store.getState();
+
+      if (drizzleState.drizzleStatus.initialized && !this.state.initialized) {
+        this.setState({ initialized: true});
+
+        // NEXT: fetch all the potInfo, and fill the map
+        console.log("drizzle initialized");
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   // Context updater method
@@ -38,8 +60,20 @@ class App extends Component {
     } );
   };
 
+  clearPotInfo = () => {
+    this.setContextAttr("potMap", new Map());
+  };
+
+  setPotInfo = (addr, potInfo) => {
+    this.setState( prevState => {
+      const { appContext } = prevState;
+      appContext.potMap.set(addr, potInfo);
+      return { appContext };
+    });
+  }
+
   render() {
-    const { drizzle, drizzleState, initialized } = this.props.drizzleContext;
+    const { drizzleState } = this.props.drizzleContext;
     const { appContext } = this.state;
 
     if (_.get(drizzleState, "web3.status") === 'failed')

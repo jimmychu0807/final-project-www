@@ -26,7 +26,7 @@ export const match = (x) => ({
 
 // Convert unix timestamp (in second) to local user friendly time
 const utsToLocalTime = (uts) => {
-  return moment(uts * 1000).format("YYYY-MM-DD HH:mm");
+  return moment.unix(uts).format("YYYY-MM-DD HH:mm");
 }
 
 const getPotType = (potType, purpose = "display") => {

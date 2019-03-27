@@ -5,12 +5,12 @@ import _ from 'lodash';
 
 // own components
 import PotsBoard from './PotsBoard'
-import { log } from '../../services/logging';
 
 // own services
 import { match } from '../../services/helpers';
 import { withAppContextConsumer } from '../../services/app-context';
 import { withDrizzleContextConsumer } from '../../services/drizzle';
+import { log } from '../../services/logging';
 
 // smart contracts
 import LotteryPot from '../../contracts/LotteryPot.json';
@@ -31,6 +31,7 @@ class PotsBoardContainer extends React.Component {
     const { drizzle, drizzleState } = props.drizzleContext;
     this.web3 = drizzle.web3;
     this.contracts = drizzle.contracts;
+    this.myAcct = drizzleState.accounts[0];
 
     this.state = { potMap: null }
   }
@@ -112,11 +113,23 @@ class PotsBoardContainer extends React.Component {
     this.props.appContext.setContextAttr("focusedPot", potAddr);
   }
 
+  handleDetermineWinner = (potAddr) => (ev) => {
+    const contract = new this.web3.eth.Contract(LotteryPot.abi, potAddr);
+    potContract.methods.determineWinner().send({ from: myAcct })
+      .then(tx => log(tx));
+  }
+
+  handleWithdrawMoney = (potAddr) => (ev) => {
+
+  }
+
   render() {
     return(
       <PotsBoard
-        potMap={this.state.potMap}
-        handleSetFocusedPot={this.handleSetFocusedPot}
+        potMap={ this.state.potMap }
+        handleSetFocusedPot={ this.handleSetFocusedPot }
+        handleDetermineWinner={ this.handleDetermineWinner }
+        handleWithdrawMoney={ this.handleWithdrawMoney }
       />
     )
   }
