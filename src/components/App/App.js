@@ -11,6 +11,7 @@ import AppContext from '../../services/app-context';
 import Routes from '../Routes';
 import PotNewModalContainer from '../PotNewModal';
 import PotParticipatesModalContainer from '../PotParticipatesModal';
+import Pot from '../Pot';
 
 import EthLoading from '../../pages/eth-loading'
 
@@ -35,14 +36,20 @@ class App extends Component {
 
   componentDidMount() {
     const { drizzle } = this.props.drizzleContext;
+
     this.unsubscribe = drizzle.store.subscribe(() => {
       const drizzleState = drizzle.store.getState();
 
       if (drizzleState.drizzleStatus.initialized && !this.state.initialized) {
         this.setState({ initialized: true});
 
-        // NEXT: fetch all the potInfo, and fill the map
-        console.log("drizzle initialized");
+        // Fetch all the potInfo, and fill the map
+        Pot.drizzle = drizzle;
+        Pot.getLotteryPots()
+          .then(potMap => {
+            console.log(potMap);
+            this.state.appContext.setContextAttr("potMap", potMap);
+          });
       }
     });
   }
@@ -73,17 +80,16 @@ class App extends Component {
   }
 
   render() {
-    const { drizzleState } = this.props.drizzleContext;
-    const { appContext } = this.state;
+    const { drizzleState, initialized } = this.props.drizzleContext;
 
     if (_.get(drizzleState, "web3.status") === 'failed')
       return <EthLoading status="error" />
 
-    else if (! _.get(drizzleState, "drizzleStatus.initialized"))
+    else if (!initialized)
       return <EthLoading status="loading" />
 
     return(
-      <AppContext.Provider value={ appContext }>
+      <AppContext.Provider value={ this.state.appContext }>
         <Routes />
         <PotNewModalContainer />
         <PotParticipatesModalContainer />

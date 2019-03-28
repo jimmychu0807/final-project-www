@@ -20,4 +20,4 @@ function withAppContextConsumer(Component) {
   }
 }
 
-export {AppContext as default, withAppContextConsumer };
+export { AppContext as default, withAppContextConsumer };

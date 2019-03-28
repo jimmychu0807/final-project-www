@@ -25,88 +25,52 @@ export const DEFAULT_POT_SORTBY = "closedTimeAscending";
 
 class PotsBoardContainer extends React.Component {
 
-  constructor(props, context) {
+  constructor(props) {
     super(props);
 
-    const { drizzle, drizzleState } = props.drizzleContext;
+    const { drizzle, drizzleState, initialized } = props.drizzleContext;
     this.web3 = drizzle.web3;
     this.contracts = drizzle.contracts;
     this.myAcct = drizzleState.accounts[0];
-
-    this.state = { potMap: null }
   }
 
-  componentDidMount() {
-    const { filter, sortBy } = this.props;
-    this.getLotteryPots({ filter, sortBy })
-      .then(potMap => this.setState({ potMap }));
-  }
-
-  getLotteryPots = async(opts = {}) => {
+  getPotShown = (opts = {}) => {
+    // Preparing parameters
     const default_opts = {
       filter: DEFAULT_POT_FILTER,
       sortBy: DEFAULT_POT_SORTBY
     }
     const { filter, sortBy } = Object.assign({}, default_opts, opts);
 
-    const { LotteryPotFactory, LotteryPot } = this.contracts;
-    const web3 = this.web3;
-
-    const potAddrs = await LotteryPotFactory.methods.getLotteryPots().call();
-
-    // Get all pot info from the blockchain
-    let potInfo = await Promise.all(potAddrs
-      .map( addr => new web3.eth.Contract(LotteryPot.abi, addr))
-      .map( async(contract) => {
-        const potName = await contract.methods.potName().call();
-
-        const potAddr = contract.options.address;
-
-        // This is in unix timestamp
-        const potClosedDateTime = await contract.methods.closedDateTime().call();
-        const potMinStake = await contract.methods.minStake().call();
-        const potType = await contract.methods.potType().call();
-        const potState = await contract.methods.potState().call();
-        const potTotalStakes = await contract.methods.totalStakes().call();
-        const potTotalParticipants = await contract.methods.totalParticipants().call();
-        const myStake = await contract.methods.myStake().call();
-
-        return { potName, potAddr, potClosedDateTime, potMinStake, potType, potState,
-          potTotalStakes, potTotalParticipants, myStake }
-      })
-    );
+    const { potMap } = this.props.appContext;
+    let potShown = Array.from(potMap.keys());
+    if (potShown.length === 0) return potShown;
 
     // filtering
     const currentUTS = moment().unix();
-    potInfo = match(filter)
-      .on( x => x === "all", () => potInfo)
+    potShown = match(filter)
+      .on( x => x === "all", () => potShown)
       .on( x => x === "upcoming",
-        () => potInfo.filter(onePot => onePot.potClosedDateTime >= currentUTS))
+        () => potShown.filter(
+          potAddr => potMap.get(potAddr).potClosedDateTime >= currentUTS)
+        )
       .on( x => x === "historical",
-        () => potInfo.filter(onePot => onePot.potClosedDateTime < currentUTS))
+        () => potShown.filter(
+          potAddr => potMap.get(potAddr).potClosedDateTime < currentUTS)
+        )
       .otherwise(() => { throw new Error(`Unrecognized filter: ${filter}`) });
 
     // in-place sorting
-    potInfo = match(sortBy)
+    potShown = match(sortBy)
       .on( x => x === 'closedTimeAscending', () =>
-        potInfo.sort( (a, b) => Number.parseInt(a.potClosedDateTime) -
-          Number.parseInt(b.potClosedDateTime) ) )
+        potShown.sort( (a, b) => Number.parseInt(potMap.get(a).potClosedDateTime) -
+          Number.parseInt(potMap.get(b).potClosedDateTime) ) )
       .on( x => x === 'closedTimeDescending', () =>
-        potInfo.sort((a, b) => Number.parseInt(b.potClosedDateTime) -
-        Number.parseInt(a.potClosedDateTime) ) )
+        potShown.sort((a, b) => Number.parseInt(potMap.get(b).potClosedDateTime) -
+        Number.parseInt(potMap.get(a).potClosedDateTime) ) )
       .otherwise(() => { throw new Error(`Unrecognized sortBy: ${sortBy}`) });
 
-    // Using Map for object storage
-
-    const potMap = new Map();
-    potInfo.forEach(onePot => {
-      const { potAddr, ...potAttrs } = onePot;
-      potMap.set(potAddr, potAttrs);
-    });
-
-    log(potMap);
-
-    return potMap;
+    return potShown;
   }
 
   handleSetFocusedPot = (potAddr) => (ev) => {
@@ -124,9 +88,12 @@ class PotsBoardContainer extends React.Component {
   }
 
   render() {
+    const { filter, sortBy } = this.props;
+    const potShown = this.getPotShown({ filter, sortBy });
+
     return(
       <PotsBoard
-        potMap={ this.state.potMap }
+        potShown={ potShown }
         handleSetFocusedPot={ this.handleSetFocusedPot }
         handleDetermineWinner={ this.handleDetermineWinner }
         handleWithdrawMoney={ this.handleWithdrawMoney }
