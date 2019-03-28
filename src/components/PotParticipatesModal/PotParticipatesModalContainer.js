@@ -34,12 +34,9 @@ class PotParticipatesModalContainer extends React.Component {
 
   render() {
     const { focusedPot } = this.props.appContext;
-    return(
-      <PotParticipatesModal
-        focusedPot={focusedPot}
-        participate={this.handleParticipate}
-      />
-    )
+    const potInfo = this.props.appContext.potMap.get(focusedPot);
+
+    return(pug`PotParticipatesModal(potInfo=potInfo participate=this.handleParticipate)`);
   }
 
 }

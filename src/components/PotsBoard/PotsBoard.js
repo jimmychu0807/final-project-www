@@ -20,14 +20,15 @@ class PotsBoard extends React.Component {
     this.web3 = drizzle.web3;
     this.contracts = drizzle.contracts;
     this.web3Helper = Web3Helper(this.web3);
+    this.myAcct = drizzleState.accounts[0];
   }
 
   renderOpenActions = (potAddr) => {
-    const { handleSetFocusedPot } = this.props;
+    const { handleOpenParticipateModal } = this.props;
     return(
       <a href="#" className="btn btn-primary" data-toggle="modal"
         data-target="#potParticipatesModal"
-        onClick={ handleSetFocusedPot(potAddr) }>
+        onClick={ handleOpenParticipateModal(potAddr) }>
         Participate
       </a>
     )
@@ -38,18 +39,19 @@ class PotsBoard extends React.Component {
 
     const onePot = this.props.appContext.potMap.get(potAddr);
     const potState = Pot.getPotState(onePot.potState);
+    const { handleDetermineWinner, handleWithdrawMoney } = this.props;
 
     if (potState === "open")
       actions.push(
         <a key={potState} href="#" className="btn btn-primary"
-          onClick={ this.props.handleDetermineWinner(potAddr) }>
+          onClick={ handleDetermineWinner(potAddr) }>
           Draw Winner
         </a>
       )
-    else if (potState === "closed")
+    else if (potState === "closed" && onePot.winner === this.myAcct)
       actions.push(
         <a key={potState} href="#" className="btn btn-primary"
-          onClick={ this.props.handleWithdrawMoney(potAddr) }>
+          onClick={ handleWithdrawMoney(potAddr) }>
           Withdraw Money!
         </a>
       )
@@ -64,36 +66,29 @@ class PotsBoard extends React.Component {
     // unix timestamp in second
     const nowUTS = moment().unix();
 
-    return(<div className="row">
-      { potShown.length > 0 && potShown.map( potAddr => {
+    return(pug`
+      .row ${ potShown.length > 0 && potShown.map( potAddr => {
         const onePot = potMap.get(potAddr);
-        return(
-          <div key={ potAddr } className="col-12 col-sm-6 col-lg-4">
-            <div className="card-deck">
-              <div className="card my-2">
-                <div className="card-body">
-                  <h5 className="card-title">{ onePot.potName }</h5>
-                  <ul className="card-text">
-                    <li>Closed Time: { helpers.utsToLocalTime(onePot.potClosedDateTime) }</li>
-                    <li>Pot Addr: { potAddr }</li>
-                    <li>Type: { helpers.getPotType(onePot.potType) }</li>
-                    <li>State: { helpers.getPotState(onePot.potState) }</li>
-                    <li>Min. Stake: { this.web3Helper.fromWei(onePot.potMinStake) } ether</li>
-                    <li>Current Stake: { this.web3Helper.fromWei(onePot.potTotalStakes) } ether</li>
-                    <li>Participants #: { onePot.potTotalParticipants }</li>
-                    <li>My stake: { this.web3Helper.fromWei(onePot.myStake) } ether</li>
-                  </ul>
+        return(pug`
+          .col-12.col-sm-6.col-lg-4(key=${ potAddr }): .card-deck: .card.my-2: .card-body
+            h5.card-title ${ onePot.potName }
+            ul.card-text
+              li Closed Time: ${ helpers.utsToLocalTime(onePot.potClosedDateTime) }
+              li Pot Addr: ${ potAddr }
+              li Type: ${ helpers.getPotType(onePot.potType) }
+              li State: ${ helpers.getPotState(onePot.potState) }
+              li Min. Stake: ${ this.web3Helper.fromWei(onePot.potMinStake) } ether
+              li Current Stake: ${ this.web3Helper.fromWei(onePot.potTotalStakes) } ether
+              li Participants #: ${ onePot.potTotalParticipants }
+              li My stake: ${ this.web3Helper.fromWei(onePot.myStake) } ether
+              li Winner: ${ onePot.winner }
 
-                  { /* action buttons */ }
-                  { onePot.potClosedDateTime > nowUTS ? this.renderOpenActions(potAddr) :
-                    this.renderClosedActions(potAddr) }
-                </div>
-              </div>
-            </div>
-          </div>
-        )
+            //- action buttons
+            ${ onePot.potClosedDateTime > nowUTS ? this.renderOpenActions(potAddr) :
+              this.renderClosedActions(potAddr) }
+        `);
       }) }
-    </div>);
+    `);
   }
 }
 

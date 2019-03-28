@@ -59,12 +59,12 @@ class App extends Component {
   }
 
   // Context updater method
-  setContextAttr = (key, val) => {
+  setContextAttr = (key, val, callback = null) => {
     this.setState( prevState => {
       const { appContext } = prevState;
       appContext[key] = val;
       return { appContext };
-    } );
+    }, callback );
   };
 
   clearPotInfo = () => {

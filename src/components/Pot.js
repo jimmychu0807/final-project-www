@@ -39,9 +39,10 @@ const Pot = {
         const potTotalStakes = await contract.methods.totalStakes().call();
         const potTotalParticipants = await contract.methods.totalParticipants().call();
         const myStake = await contract.methods.myStake().call();
+        const winner = await contract.methods.winner().call();
 
         return { potName, potAddr, potClosedDateTime, potMinStake, potType, potState,
-          potTotalStakes, potTotalParticipants, myStake }
+          potTotalStakes, potTotalParticipants, myStake, winner }
       })
     );
 
