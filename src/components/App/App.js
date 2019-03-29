@@ -15,9 +15,6 @@ import Pot from '../Pot';
 
 import EthLoading from '../../pages/eth-loading'
 
-// import own style
-import './style.css';
-
 class App extends Component {
   constructor(props) {
     super(props);
