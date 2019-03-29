@@ -85,7 +85,7 @@ class PotsBoard extends React.Component {
         const onePot = potMap.get(potAddr);
 
         const contractLink = process.env.NODE_ENV === 'development' ? "#" :
-          `${RINKEBY_CONTRACT_VIEW_PREFIX}/${potAddr}`
+          `${RINKEBY_CONTRACT_VIEW_PREFIX}${potAddr}`
 
         return(pug`
           .col-12.col-sm-6.col-lg-4(key=${ potAddr }): .pot-card.card.shadow.border-success.my-2
