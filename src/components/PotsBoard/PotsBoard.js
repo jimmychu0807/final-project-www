@@ -11,6 +11,12 @@ import helpers, { Web3Helper } from '../../services/helpers';
 // object model
 import Pot from '../Pot';
 
+// own sass
+import './pots-board.sass';
+
+const RINKEBY_CONTRACT_VIEW_PREFIX = "https://rinkeby.etherscan.io/address/";
+const POT_ATTR_CLOSED_TIME = "Pot Closed Time";
+
 class PotsBoard extends React.Component {
 
   constructor(props, context) {
@@ -32,6 +38,14 @@ class PotsBoard extends React.Component {
         Participate
       </a>
     )
+  }
+
+  componentDidMount() {
+    helpers.kickstartBootstrap();
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    helpers.kickstartBootstrap();
   }
 
   renderClosedActions = (potAddr) => {
@@ -67,25 +81,35 @@ class PotsBoard extends React.Component {
     const nowUTS = moment().unix();
 
     return(pug`
-      .row ${ potShown.length > 0 && potShown.map( potAddr => {
+      .row.card-deck ${ potShown.length > 0 && potShown.map( potAddr => {
         const onePot = potMap.get(potAddr);
-        return(pug`
-          .col-12.col-sm-6.col-lg-4(key=${ potAddr }): .card-deck: .card.my-2: .card-body
-            h5.card-title ${ onePot.potName }
-            ul.card-text
-              li Closed Time: ${ helpers.utsToLocalTime(onePot.potClosedDateTime) }
-              li Pot Addr: ${ potAddr }
-              li Type: ${ helpers.getPotType(onePot.potType) }
-              li State: ${ helpers.getPotState(onePot.potState) }
-              li Min. Stake: ${ this.web3Helper.fromWei(onePot.potMinStake) } ether
-              li Current Stake: ${ this.web3Helper.fromWei(onePot.potTotalStakes) } ether
-              li Participants #: ${ onePot.potTotalParticipants }
-              li My stake: ${ this.web3Helper.fromWei(onePot.myStake) } ether
-              li Winner: ${ onePot.winner }
 
-            //- action buttons
-            ${ onePot.potClosedDateTime > nowUTS ? this.renderOpenActions(potAddr) :
-              this.renderClosedActions(potAddr) }
+        const contractLink = process.env.NODE_ENV === 'development' ? "#" :
+          `${RINKEBY_CONTRACT_VIEW_PREFIX}/${potAddr}`
+
+        return(pug`
+          .col-12.col-sm-6.col-lg-4(key=${ potAddr }): .pot-card.card.shadow.border-success.my-2
+            .card-header
+              strong.mr-3.text-success ${ onePot.potName }
+              a(href=contractLink target="_blank")
+                i.fa-fw.fas.fa-link.text-success
+            .card-body
+              ul.list-unstyled.card-text
+                li
+                  i.fa-fw.fa-lg.far.fa-clock.mr-3(data-toggle="tooltip"
+                    data-placement="auto" title=POT_ATTR_CLOSED_TIME)
+                  span.card-text--small ${ helpers.utsToLocalTime(onePot.potClosedDateTime) }
+                li Type: ${ helpers.getPotType(onePot.potType) }
+                li State: ${ helpers.getPotState(onePot.potState) }
+                li Min. Stake: ${ this.web3Helper.fromWei(onePot.potMinStake) } ether
+                li Current Stake: ${ this.web3Helper.fromWei(onePot.potTotalStakes) } ether
+                li Participants #: ${ onePot.potTotalParticipants }
+                li My stake: ${ this.web3Helper.fromWei(onePot.myStake) } ether
+                li Winner: ${ onePot.winner }
+
+              //- action buttons
+              ${ onePot.potClosedDateTime > nowUTS ? this.renderOpenActions(potAddr) :
+                this.renderClosedActions(potAddr) }
         `);
       }) }
     `);

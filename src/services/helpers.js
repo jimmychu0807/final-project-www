@@ -54,6 +54,10 @@ const forDisplay = (val) => {
   return _.upperFirst(res);
 }
 
+const kickstartBootstrap = () => {
+  $('[data-toggle="tooltip"]').tooltip();
+}
+
 // --- End of Internal helper functions ---
 
-export default { utsToLocalTime, getPotType, getPotState }
+export default { utsToLocalTime, getPotType, getPotState, kickstartBootstrap }
