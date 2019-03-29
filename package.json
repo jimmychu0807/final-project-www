@@ -8,12 +8,14 @@
     "drizzle-react": "^1.2.0",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
+    "node-sass": "^4.11.0",
     "query-string": "^6.4.0",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "2.1.8"
+    "react-scripts": "2.1.8",
+    "web3": "^1.0.0-beta.50"
   },
   "scripts": {
     "start:dev": "react-app-rewired --inspect start",

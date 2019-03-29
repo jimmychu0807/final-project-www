@@ -79,10 +79,8 @@ class PotsBoardContainer extends React.Component {
 
     // Need to use callback here, to ensure state is before before showing
     //   PotParticipatesModal.
-    this.props.appContext.setContextAttr("focusedPot", potAddr, () => {
-      $(targetId).modal("show");
-      console.log("completed participate handler", targetId, potAddr);
-    });
+    this.props.appContext.setContextAttr("focusedPot", potAddr,
+      () => $(targetId).modal("show"));
   }
 
   handleDetermineWinner = (potAddr) => (ev) => {
