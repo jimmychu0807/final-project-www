@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start:dev": "react-app-rewired --inspect start",
-    "build": "react-app-rewired build",
+    "build": "rimraf build && react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
@@ -36,6 +36,7 @@
     "@babel/plugin-transform-react-jsx": "^7.3.0",
     "babel-plugin-transform-react-pug": "^7.0.0",
     "customize-cra": "^0.2.12",
-    "react-app-rewired": "^2.1.1"
+    "react-app-rewired": "^2.1.1",
+    "rimraf": "^2.6.3"
   }
 }
