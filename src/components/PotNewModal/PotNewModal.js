@@ -40,8 +40,8 @@ class PotNewModal extends React.Component {
 
   render() {
     return (pug`
-      #potNewModal.modal.fade(tabIndex="-1" role="dialog" aria-hidden="true")
-        .modal-dialog(role="document"): .modal-content
+      #potNewModal.modal.fade(tabIndex="-1" role="dialog" aria-hidden="true" data-backdrop='static')
+        .modal-dialog.modal-dialog-centered(role="document"): .modal-content
 
           //- header
           .modal-header
@@ -58,13 +58,13 @@ class PotNewModal extends React.Component {
               label.col-sm-3.col-form-label(for="inputPotMinStake" required) Min. Stake
               .col-sm-9: .input-group
                 input#inputPotMinStake.form-control(placeholder="Min. Stake" type="number")
-                .input-group-append: span.input-group-text ether
+                .input-group-append: span.input-group-text eth
             .row.form-group
               label.col-sm-3.col-form-label(for="inputPotExpiredTime" required) Closed Time
               .col-sm-9: input#inputPotExpiredTime.form-control(type="datetime-local")
 
             fieldset.form-group: .row
-              legend.col-form-label.col-sm-3.pt-0 Style
+              legend.col-form-label.col-sm-3.pt-0 Pot Type
               .col-sm-9
                 .form-check
                   input#potTypeEqual.form-check-input(type="radio" name="inputPotType" value=0)
@@ -77,7 +77,7 @@ class PotNewModal extends React.Component {
               label.col-sm-3.col-form-label(for="inputYourStake" required) Your Stake
               .col-sm-9: .input-group
                 input#inputYourStake.form-control(placeholder="Your Stake" type="number")
-                .input-group-append: span.input-group-text ether
+                .input-group-append: span.input-group-text eth
 
           //- footer
           .modal-footer

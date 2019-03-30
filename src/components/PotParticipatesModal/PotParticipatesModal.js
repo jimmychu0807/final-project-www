@@ -12,7 +12,7 @@ class PotParticipatesModal extends React.Component {
     super(props);
     this.formRef = React.createRef();
     this.web3 = props.drizzleContext.drizzle.web3;
-    this.web3Helper = Web3Helper(this.web3);
+    this.w3Helper = Web3Helper(this.web3);
   }
 
   handleCloseModal = (ev) => {
@@ -21,40 +21,47 @@ class PotParticipatesModal extends React.Component {
     const form = this.formRef.current;
     const yourStakeInEther = form.querySelector("#inputYourStake").value;
     const yourStake = this.web3.utils.toWei(yourStakeInEther);
-    const potAddr = this.props.potInfo.potAddr;
+    const potAddr = this.props.onePot.potAddr;
 
     this.props.participate(potAddr, yourStake);
   }
 
   render() {
-    const { potInfo } = this.props;
+    const { onePot } = this.props;
+    if (!onePot) return("");
 
-    if (!potInfo) return("");
-
+    const w3Helper = this.w3Helper;
     return(pug`
-      #potParticipatesModal.modal.fade(tabIndex="-1" role="dialog" aria-hidden="true")
-        .modal-dialog(role="document"): .modal-content
+      #potParticipatesModal.modal.fade(tabIndex="-1" role="dialog" aria-hidden="true" data-backdrop='static')
+        .modal-dialog.modal-dialog-centered(role="document"): .modal-content
 
           //- header
           .modal-header
             h5#potParticipatesModal-label.modal-title
-              | Participate in Pot - ${ potInfo.potName }
+              = w3Helper.gt(onePot.myStake, 0) ? "Add Stake: " : "Join Pot: "
+              = onePot.potName
             button.close(type="button" data-dismiss="modal" aria-label="Close")
               span(aria-hidden="true") &times;
 
           //- body
           .modal-body: form#participatePotForm(ref=this.formRef)
-            //- TODO: showing additional stake
+            if w3Helper.gt(onePot.myStake, 0)
+              .d-flex.mb-3: .border.border-success.rounded-pill.flex-grow-1.px-3.py-1.
+                Your stake: #[strong ${ this.w3Helper.fromWei(onePot.myStake) }] #[small eth]
+
             .row.form-group
-              label.col-12.col-form-label
-                | Minimum Stake: ${ this.web3Helper.fromWei(potInfo.potMinStake) } ether
-              label.col-12.col-form-label
-                | Your existed Stake: ${ this.web3Helper.fromWei(potInfo.myStake) } ether
+              label.col-sm-3.col-form-label(for="inputPotMinStake" required) Min. Stake
+              .col-sm-9: .input-group
+                input#inputPotMinStake.form-control-plaintext(readOnly placeholder="Min. Stake" type="text"
+                  value=this.w3Helper.fromWei(onePot.potMinStake))
+                .input-group-append: span.input-group-text eth
+
             .row.form-group
-              label.col-sm-3.col-form-label(for="inputYourStake") Your Stake
+              label.col-sm-3.col-form-label(for="inputYourStake")
+                = w3Helper.gt(onePot.myStake, 0) ? "Add Stake" : "Your Stake"
               .col-sm-9: .input-group
                 input#inputYourStake.form-control(placeholder="Your Stake" type="number" required)
-                .input-group-append: span.input-group-text ether
+                .input-group-append: span.input-group-text eth
 
           //- footer
           .modal-footer

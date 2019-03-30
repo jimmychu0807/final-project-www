@@ -1,5 +1,5 @@
 import React from 'react';
-import './Footer.sass';
+import './footer.sass';
 
 const Footer = (props) => {
   return (pug`

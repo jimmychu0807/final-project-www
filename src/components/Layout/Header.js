@@ -16,7 +16,7 @@ const Header = (props) => {
   return(pug`
     header: nav.fixed-top.navbar.navbar-light.navbar-expand-md
       a.navbar-brand(href="/")
-        img.d-inline-block.align-top(width="30" height="30" alt="Logo" src=logo)
+        img.d-inline-block.align-top.mr-3(width="30" height="30" alt="Logo" src=logo)
         | Lottery Pots
 
       //- collapsable nav menu

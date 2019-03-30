@@ -5,10 +5,13 @@ import Pot from '../components/Pot';
 
 export const Web3Helper = (web3) => {
   return {
-    fromWei(wei, decimal = 3) {
+    fromWei: (wei, decimal = 3) => {
       let res = web3.utils.fromWei(wei, "ether");
       return Number.parseFloat(res).toFixed(decimal);
     },
+    gt: (wei, num) => {
+      return web3.utils.toBN(wei).gt(num);
+    }
   };
 }
 
@@ -51,7 +54,7 @@ const getPotState = (potState, purpose = "display") => {
 // Convert "equalShare" => "Equal Share"
 const forDisplay = (val) => {
   let res = val.replace(/([A-Z])/g, ' $1').trim();
-  return _.upperFirst(res);
+  return _.toUpper(res);
 }
 
 const kickstartBootstrap = () => {

@@ -7,7 +7,7 @@ import { log } from '../services/logging';
 import LotteryPot from '../contracts/LotteryPot.json';
 
 // Pot model-related constants
-const POT_TYPES = [ "equalShare", "weightedShare" ];
+const POT_TYPES = [ "Equal", "Weighted" ];
 const POT_STATES = [ "open", "closed", "stakeWithdrawn" ];
 
 const Pot = {
