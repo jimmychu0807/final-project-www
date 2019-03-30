@@ -74,40 +74,10 @@ class PotsBoardContainer extends React.Component {
     return potShown;
   }
 
-  handleOpenParticipateModal = (potAddr) => (ev) => {
-    ev.preventDefault();
-    const targetId = $(ev.currentTarget).data("target")
-
-    // Need to use callback here, to ensure state is before before showing
-    //   PotParticipatesModal.
-    this.props.appContext.setContextAttr("focusedPot", potAddr,
-      () => $(targetId).modal("show"));
-  }
-
-  handleDetermineWinner = (potAddr) => (ev) => {
-    const potContract = new this.web3.eth.Contract(LotteryPot.abi, potAddr);
-    potContract.methods.determineWinner().send({ from: this.myAcct })
-      .then(tx => log(tx));
-  }
-
-  handleWithdrawMoney = (potAddr) => (ev) => {
-    const potContract = new this.web3.eth.Contract(LotteryPot.abi, potAddr);
-    potContract.methods.winnerWithdraw().send({ from: this.myAcct })
-      .then(tx => log(tx));
-  }
-
   render() {
     const { filter, sortBy } = this.props;
     const potShown = this.getPotShown({ filter, sortBy });
-
-    return(
-      <PotsBoard
-        potShown={ potShown }
-        handleOpenParticipateModal={ this.handleOpenParticipateModal }
-        handleDetermineWinner={ this.handleDetermineWinner }
-        handleWithdrawMoney={ this.handleWithdrawMoney }
-      />
-    )
+    return(pug`PotsBoard(potShown=potShown)`);
   }
 }
 
