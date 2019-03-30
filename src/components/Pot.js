@@ -18,7 +18,8 @@ const Pot = {
   getLotteryPots: async function() {
     if (!this.drizzle) return;
 
-    const { web3 } = this.drizzle;
+    const { web3, store } = this.drizzle;
+    const myAcct = store.getState().accounts[0];
     const { LotteryPotFactory, LotteryPot } = this.drizzle.contracts;
 
     const potAddrs = await LotteryPotFactory.methods.getLotteryPots().call();
@@ -38,7 +39,7 @@ const Pot = {
         const potState = await contract.methods.potState().call();
         const potTotalStakes = await contract.methods.totalStakes().call();
         const potTotalParticipants = await contract.methods.totalParticipants().call();
-        const myStake = await contract.methods.myStake().call();
+        const myStake = await contract.methods.myStake().call({ from: myAcct });
         const winner = await contract.methods.winner().call();
 
         return { potName, potAddr, potClosedDateTime, potMinStake, potType, potState,

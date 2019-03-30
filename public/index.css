@@ -1,6 +1,17 @@
+html, body {
+  height: 100%;
+}
+
 body {
   color: #333;
   font-family: -apple-system, BlinkMacSystemFont, "Avenir Next", "Ubuntu",
     "Franklin Gothic Medium", "Century Gothic", "Liberation Sans", sans-serif;
   font-weight: 300;
+  background-color: floralwhite;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }

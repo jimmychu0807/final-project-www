@@ -20,8 +20,8 @@ class PotParticipatesModalContainer extends React.Component {
 
     const { drizzle, drizzleState } = props.drizzleContext;
     this.web3 = drizzle.web3;
-    this.contracts = drizzle.contracts;
     this.myAcct = drizzleState.accounts[0];
+    this.contracts = drizzle.contracts;
   }
 
   handleParticipate = (potAddr, yourStake) => {

@@ -12,6 +12,7 @@ class PotNewModalContainer extends React.Component {
     const { drizzle, drizzleState } = props.drizzleContext;
 
     this.web3 = drizzle.web3;
+    this.myAcct = drizzleState.accounts[0];
     this.contracts = drizzle.contracts;
   }
 
@@ -22,7 +23,7 @@ class PotNewModalContainer extends React.Component {
     // create the contract via LotteryPotFactory
     const { LotteryPotFactory } = this.contracts;
     LotteryPotFactory.methods.createLotteryPot(potName,
-      potDuration, potMinStake, potType).send({ value: yourStake })
+      potDuration, potMinStake, potType).send({ from: this.myAcct, value: yourStake })
       .then(receipt => console.log(receipt));
   };
 

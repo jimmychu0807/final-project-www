@@ -3,7 +3,7 @@ import './footer.sass';
 
 const Footer = (props) => {
   return (pug`
-    footer.footer.fixed-bottom.text-center
+    footer.footer.text-center
       hr
       div.
         Built with #[span(role='img' aria-label='love') ❤️] by Jimmy Chu

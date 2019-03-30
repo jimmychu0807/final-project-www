@@ -97,8 +97,8 @@ class PotsBoard extends React.Component {
               a(href=contractLink target="_blank")
                 strong.mr-1.text-success ${ onePot.potName }
                 i.fa-fw.fas.fa-link.text-success
-            .card-body
-              ul.list-unstyled.card-text
+            .card-body.d-flex.flex-column
+              ul.list-unstyled.card-text.flex-grow-1
                 li.d-flex
                   .fw-col.px-2.text-center: i.fa-fw.far.fa-clock(data-toggle="tooltip"
                     data-placement="auto" title=POT_ATTR_CLOSED_TIME)
