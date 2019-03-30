@@ -38,19 +38,19 @@ class PotCardContainer extends React.Component {
   }
 
   handleDetermineWinner = (ev) => {
-    const { potAttr } = this.props;
+    const { potAddr } = this.props;
     const potContract = new this.web3.eth.Contract(LotteryPot.abi, potAddr);
 
     potContract.methods.determineWinner().send({ from: this.myAcct })
-      .then(tx => log(tx));
+      .then(tx => console.log(tx));
   }
 
   handleWithdrawMoney = (ev) => {
-    const { potAttr } = this.props;
+    const { potAddr } = this.props;
     const potContract = new this.web3.eth.Contract(LotteryPot.abi, potAddr);
 
     potContract.methods.winnerWithdraw().send({ from: this.myAcct })
-      .then(tx => log(tx));
+      .then(tx => console.log(tx));
   }
 
   render() {
