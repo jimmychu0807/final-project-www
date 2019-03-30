@@ -29,7 +29,7 @@ class PotParticipatesModalContainer extends React.Component {
     log(`Participate: ${potAddr}: ${yourStake}`);
     const potContract = new this.web3.eth.Contract(LotteryPot.abi, potAddr);
     potContract.methods.participate().send({ from: this.myAcct, value: yourStake })
-      .then(receipt => log(receipt));
+      .then(receipt => console.log(receipt));
   }
 
   render() {

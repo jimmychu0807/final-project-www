@@ -15,18 +15,17 @@ class PotNewModalContainer extends React.Component {
     this.contracts = drizzle.contracts;
   }
 
-  handleCreateNewPot = async(params) => {
+  handleCreateNewPot = params => {
     // TODO: Params validation
     const { potName, potMinStake, potDuration, potType, yourStake } = params;
 
-    log(`Create Pot with: ${potName}, ${potMinStake}, ${potDuration}, ${potType}, ${yourStake}`);
+    console.log(`Create Pot with: ${potName}, ${potMinStake}, ${potDuration}, ${potType}, ${yourStake}`);
 
     // create the contract via LotteryPotFactory
     const { LotteryPotFactory } = this.contracts;
-    const tx = await LotteryPotFactory.methods.createLotteryPot(potName,
-      potDuration, potMinStake, potType).send({ value: yourStake });
-
-    log(tx);
+    LotteryPotFactory.methods.createLotteryPot(potName,
+      potDuration, potMinStake, potType).send({ value: yourStake })
+      .then(receipt => console.log(receipt));
   };
 
   render() {
