@@ -121,13 +121,14 @@ class PotsBoard extends React.Component {
                   .fw-col.px-2.text-center: span.fa-fw(data-toggle="tooltip"
                     data-placement="auto" title=POT_ATTR_TOTAL_STAKE) 🏆
                   .flex-grow-1 ${ this.w3Helper.fromWei(onePot.potTotalStakes) } #[small eth]
+
                 unless helpers.isAddrZero(onePot.winner)
                   li.d-flex
                     .fw-col.px-2.text-center: span.fa-fw(data-toggle="tooltip"
                       data-placement="auto" title=POT_ATTR_WINNER) 🤩
                     .flex-grow-1 ${ _.truncate(onePot.winner, { length: 16 }) }
 
-                if w3Helper.cmp(onePot.myStake, 0) > 0
+                if w3Helper.cmp(onePot.myStake, 0) > 0 && onePot.potState === '0'
                   li.d-flex.my-1: .border.border-success.rounded-pill.flex-grow-1.px-3.
                     Your stake: #[strong ${ this.w3Helper.fromWei(onePot.myStake) }] #[small eth]
 
