@@ -18,7 +18,7 @@ import LotteryPot from '../../contracts/LotteryPot.json';
 // --- Constant Declaration ---
 // Notice these are UI-related constants. Model-related constants should be
 //   defined at `components/Pot.js`.
-const POT_FILTERS = [ "all", "upcoming", "historical" ];
+const POT_FILTERS = [ "all", "upcoming", "closed", "withdrawn" ];
 export const DEFAULT_POT_FILTER = "upcoming";
 const POT_SORTBY = [ "closedTimeAscending", "closedTimeDescending" ];
 export const DEFAULT_POT_SORTBY = "closedTimeAscending";
@@ -50,14 +50,15 @@ class PotsBoardContainer extends React.Component {
     const currentUTS = moment().unix();
     potShown = match(filter)
       .on( x => x === "all", () => potShown)
-      .on( x => x === "upcoming",
-        () => potShown.filter(
-          potAddr => potMap.get(potAddr).potClosedDateTime >= currentUTS)
-        )
-      .on( x => x === "historical",
-        () => potShown.filter(
-          potAddr => potMap.get(potAddr).potClosedDateTime < currentUTS)
-        )
+      .on( x => x === "upcoming", () => potShown.filter(
+        potAddr => potMap.get(potAddr).potClosedDateTime >= currentUTS))
+      .on( x => x === "closed", () => potShown.filter( potAddr => {
+        const onePot = potMap.get(potAddr);
+        return onePot.potClosedDateTime < currentUTS && onePot.potState !== "2";
+      }))
+      .on ( x => x === "withdrawn", () => potShown.filter(
+        potAddr => potMap.get(potAddr).potState === "2"
+      ))
       .otherwise(() => { throw new Error(`Unrecognized filter: ${filter}`) });
 
     // in-place sorting

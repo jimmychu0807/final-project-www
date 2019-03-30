@@ -38,14 +38,14 @@ class PotParticipatesModal extends React.Component {
           //- header
           .modal-header
             h5#potParticipatesModal-label.modal-title
-              = w3Helper.gt(onePot.myStake, 0) ? "Add Stake: " : "Join Pot: "
+              = w3Helper.cmp(onePot.myStake, 0) > 0 ? "Add Stake: " : "Join Pot: "
               = onePot.potName
             button.close(type="button" data-dismiss="modal" aria-label="Close")
               span(aria-hidden="true") &times;
 
           //- body
           .modal-body: form#participatePotForm(ref=this.formRef)
-            if w3Helper.gt(onePot.myStake, 0)
+            if w3Helper.cmp(onePot.myStake, 0) > 0
               .d-flex.mb-3: .border.border-success.rounded-pill.flex-grow-1.px-3.py-1.
                 Your stake: #[strong ${ this.w3Helper.fromWei(onePot.myStake) }] #[small eth]
 
@@ -58,7 +58,7 @@ class PotParticipatesModal extends React.Component {
 
             .row.form-group
               label.col-sm-3.col-form-label(for="inputYourStake")
-                = w3Helper.gt(onePot.myStake, 0) ? "Add Stake" : "Your Stake"
+                = w3Helper.cmp(onePot.myStake, 0) > 0 ? "Add Stake" : "Your Stake"
               .col-sm-9: .input-group
                 input#inputYourStake.form-control(placeholder="Your Stake" type="number" required)
                 .input-group-append: span.input-group-text eth

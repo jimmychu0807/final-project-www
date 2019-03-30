@@ -9,6 +9,13 @@ import Header from './Header';
 
 class HeaderContainer extends React.Component {
 
+  static ROUTES = {
+    OPEN_POT: "/pots",
+    CLOSED_POT: "/pots?filter=closed&sortBy=closedTimeDescending",
+    WITHDRAWN_POT: "/pots?filter=withdrawn&sortBy=closedTimeDescending",
+    ALL_POT: "/pots?filter=all&sortBy=closedTimeDescending",
+  }
+
   constructor(props) {
     super(props);
 
@@ -21,7 +28,8 @@ class HeaderContainer extends React.Component {
   }
 
   render() {
-    return(<Header { ...this.state } />);
+    const props = Object.assign({}, this.state, { routes: HeaderContainer.ROUTES});
+    return(<Header { ...props } />);
   }
 }
 

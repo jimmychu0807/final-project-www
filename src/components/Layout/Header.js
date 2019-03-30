@@ -7,11 +7,9 @@ import _ from 'lodash';
 import logo from '../../assets/img/logo.png';
 import './header.sass';
 
-const HISTORICAL_POT_ACTION = "/pots?filter=historical&sortBy=closedTimeDescending";
-
 const Header = (props) => {
 
-  const { account, accountBal } = props;
+  const { account, accountBal, routes } = props;
 
   return(pug`
     header: nav.fixed-top.navbar.navbar-light.navbar-expand-md
@@ -30,10 +28,10 @@ const Header = (props) => {
           li.nav-item.dropdown
             a#navbarPotDropdown.nav-link.dropdown-toggle(href="#" role="button" data-toggle="dropdown") Pot Filter
             .dropdown-menu.dropdown-menu-right
-              a.dropdown-item(href="#") Open Pots
-              a.dropdown-item(href="#") Closed Pots
-              a.dropdown-item(href="#") Withdrawn Pots
-              a.dropdown-item(href="#") All Pots
+              Link.dropdown-item(to=routes['OPEN_POT']) Open Pots
+              Link.dropdown-item(to=routes['CLOSED_POT']) Closed Pots
+              Link.dropdown-item(to=routes['WITHDRAWN_POT']) Withdrawn Pots
+              Link.dropdown-item(to=routes['ALL_POT']) All Pots
 
         //- personal account info
         .d-flex.flex-column.align-items-start

@@ -19,8 +19,6 @@ class PotNewModalContainer extends React.Component {
     // TODO: Params validation
     const { potName, potMinStake, potDuration, potType, yourStake } = params;
 
-    console.log(`Create Pot with: ${potName}, ${potMinStake}, ${potDuration}, ${potType}, ${yourStake}`);
-
     // create the contract via LotteryPotFactory
     const { LotteryPotFactory } = this.contracts;
     LotteryPotFactory.methods.createLotteryPot(potName,

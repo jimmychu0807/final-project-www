@@ -9,8 +9,8 @@ export const Web3Helper = (web3) => {
       let res = web3.utils.fromWei(wei, "ether");
       return Number.parseFloat(res).toFixed(decimal);
     },
-    gt: (wei, num) => {
-      return web3.utils.toBN(wei).gt(num);
+    cmp: (wei, num) => {
+      return web3.utils.toBN(wei).cmp(web3.utils.toBN(num));
     }
   };
 }
@@ -50,6 +50,10 @@ const getPotState = (potState, purpose = "display") => {
   if (purpose === "display") return forDisplay(Pot.POT_STATES[iPotState]);
 }
 
+const isAddrZero = (addr) => {
+  return addr.toString().startsWith("0x0000000000000000000");
+}
+
 // --- Internal helper functions ---
 // Convert "equalShare" => "Equal Share"
 const forDisplay = (val) => {
@@ -63,4 +67,5 @@ const kickstartBootstrap = () => {
 
 // --- End of Internal helper functions ---
 
-export default { utsToLocalTime, getPotType, getPotState, kickstartBootstrap }
+export default { utsToLocalTime, getPotType, getPotState, kickstartBootstrap,
+  isAddrZero }

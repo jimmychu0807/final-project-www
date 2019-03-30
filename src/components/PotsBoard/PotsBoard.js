@@ -19,7 +19,8 @@ const POT_ATTR_CLOSED_TIME = "Pot Closed Time";
 const POT_ATTR_TOTAL_PARTICIPANTS = "Total Participants";
 const POT_ATTR_TOTAL_STAKE = "Total Stake";
 const POT_ATTR_MIN_STAKE = "Minimum Stake";
-const POT_ATTR_POT_TYPE = "Pot Type";
+const POT_ATTR_POT_TYPE = "Pot Status & Type";
+const POT_ATTR_WINNER = "Pot Winner";
 
 class PotsBoard extends React.Component {
 
@@ -39,11 +40,11 @@ class PotsBoard extends React.Component {
     const onePot = this.props.appContext.potMap.get(potAddr);
 
     return(pug`
-      .row.justify-content-center: .col-10.col-md-5
+      .row.justify-content-center: .col-6.col-md-8
         a.btn.btn-block.btn-primary(href='#' data-toggle="modal"
           data-target="#potParticipatesModal"
           onClick=handleOpenParticipateModal(potAddr) )
-            = w3Helper.gt(onePot.myStake, 0) ? "Add Stake" : "Join"
+            = w3Helper.cmp(onePot.myStake, 0) > 0 ? "Add Stake" : "Join"
     `)
   }
 
@@ -56,28 +57,24 @@ class PotsBoard extends React.Component {
   }
 
   renderClosedActions = (potAddr) => {
-    let actions = [];
+    let actions = null;
 
     const onePot = this.props.appContext.potMap.get(potAddr);
     const potState = Pot.getPotState(onePot.potState);
     const { handleDetermineWinner, handleWithdrawMoney } = this.props;
 
     if (potState === "open")
-      actions.push(
-        <a key={potState} href="#" className="btn btn-primary"
-          onClick={ handleDetermineWinner(potAddr) }>
-          Draw Winner
-        </a>
-      )
+      actions = pug`
+        .row.justify-content-center: .col-6.col-md-8
+          a.btn.btn-block.btn-primary(href='#'
+            onClick=handleDetermineWinner(potAddr)) Draw Winner`;
     else if (potState === "closed" && onePot.winner === this.myAcct)
-      actions.push(
-        <a key={potState} href="#" className="btn btn-primary"
-          onClick={ handleWithdrawMoney(potAddr) }>
-          Withdraw Money!
-        </a>
-      )
+      actions = pug`
+        .row.justify-content-center: .col-6.col-md-8
+          a.btn.btn-block.btn-primary(href='#'
+            onClick=handleWithdrawMoney(potAddr)) Withdraw Money!`;
 
-    return(actions);
+    return actions;
   }
 
   render() {
@@ -95,7 +92,7 @@ class PotsBoard extends React.Component {
           `${RINKEBY_CONTRACT_VIEW_PREFIX}${potAddr}`
 
         return(pug`
-          .col-12.col-md-6.col-lg-4(key=${ potAddr }): .pot-card.card.shadow.border-success.my-2
+          .col-12.col-md-6.col-lg-4.d-flex(key=${ potAddr }): .pot-card.card.shadow.border-success.flex-grow-1.my-2
             .card-header
               a(href=contractLink target="_blank")
                 strong.mr-1.text-success ${ onePot.potName }
@@ -109,7 +106,9 @@ class PotsBoard extends React.Component {
                 li.d-flex
                   .fw-col.px-2.text-center: i.fa-fw.far.fa-flag(data-toggle="tooltip"
                     data-placement="auto" title=POT_ATTR_POT_TYPE)
-                  .flex-grow-1: span.badge.badge-success ${ helpers.getPotType(onePot.potType) }
+                  .flex-grow-1
+                    span.mr-3.badge.badge-success ${ helpers.getPotState(onePot.potState) }
+                    span.badge.badge-warning ${ helpers.getPotType(onePot.potType) }
                 li.d-flex
                   .fw-col.px-2.text-center: i.fa-fw.fas.fa-coins(data-toggle="tooltip"
                     data-placement="auto" title=POT_ATTR_MIN_STAKE)
@@ -122,7 +121,13 @@ class PotsBoard extends React.Component {
                   .fw-col.px-2.text-center: span.fa-fw(data-toggle="tooltip"
                     data-placement="auto" title=POT_ATTR_TOTAL_STAKE) 🏆
                   .flex-grow-1 ${ this.w3Helper.fromWei(onePot.potTotalStakes) } #[small eth]
-                if w3Helper.gt(onePot.myStake, 0)
+                unless helpers.isAddrZero(onePot.winner)
+                  li.d-flex
+                    .fw-col.px-2.text-center: span.fa-fw(data-toggle="tooltip"
+                      data-placement="auto" title=POT_ATTR_WINNER) 🤩
+                    .flex-grow-1 ${ _.truncate(onePot.winner, { length: 16 }) }
+
+                if w3Helper.cmp(onePot.myStake, 0) > 0
                   li.d-flex.my-1: .border.border-success.rounded-pill.flex-grow-1.px-3.
                     Your stake: #[strong ${ this.w3Helper.fromWei(onePot.myStake) }] #[small eth]
 
