@@ -23,6 +23,11 @@ class PotsBoard extends React.Component {
     const { potShown } = this.props;
     const nowUTS = moment().unix();
     return(pug`
+      .row.no-gutters.justify-content-center.col-12
+        .alert.alert-success(role="alert").small.
+          Please refresh the browser manually (ctrl-R/cmd-R) to see update on the blockchain.#[br]
+          It takes about #[strong 15 seconds to populate changes on the network].#[br]
+          If you are a developer, open console log to see transaction confirmation.
       .row.card-deck.
         ${ potShown.length > 0 && potShown.map( potAddr => pug`
           .col-12.col-md-6.col-lg-4.d-flex(key=${ potAddr })
