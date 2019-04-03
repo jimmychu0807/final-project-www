@@ -16,7 +16,7 @@ COMPILE_CONTRACTS=$1
 # 1. build truffle
 if [ "$COMPILE_CONTRACTS" = "-c" ]; then
   pushd $TRUFFLE_DIR &>/dev/null
-  truffle migrate --reset --compile-all --network rinkeby
+  yarn deploy:rinkeby
   popd &>/dev/null
 fi
 
