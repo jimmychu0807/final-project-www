@@ -20,6 +20,7 @@
     "start:dev": "react-app-rewired --inspect start",
     "build": "rimraf build && react-app-rewired build",
     "test": "react-app-rewired test",
+    "deploy": "bin/deploy.sh",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
